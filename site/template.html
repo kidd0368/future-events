@@ -1,0 +1,295 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="robots" content="noindex, nofollow">
+<title>未來事件時間表</title>
+<style>
+:root{
+  --bg:#0d1117; --bg2:#161b22; --bg3:#1c2330; --line:#2a3444;
+  --fg:#dbe2ea; --fg-dim:#8a93a3; --gold:#e8b339; --red:#ff5c5c;
+  --c-央行利率:#e05c5c; --c-總經數據:#4d9de0; --c-台股法說:#3fb27f;
+  --c-財報:#a06ee1; --c-營收:#2fbfbf; --c-產品科技:#e8963a;
+  --c-政治政策:#d764a8; --c-其他:#8a93a3;
+}
+*{box-sizing:border-box;margin:0;padding:0}
+body{background:var(--bg);color:var(--fg);font-family:"Noto Sans TC","Microsoft JhengHei",system-ui,sans-serif;font-size:15px;line-height:1.55}
+a{color:#6ab0f3;text-decoration:none}
+a:hover{text-decoration:underline}
+
+header{position:sticky;top:0;z-index:50;background:rgba(13,17,23,.92);backdrop-filter:blur(8px);border-bottom:1px solid var(--line);padding:10px 14px 8px}
+.h-top{display:flex;align-items:baseline;gap:12px;flex-wrap:wrap}
+.h-top h1{font-size:19px;color:var(--gold);letter-spacing:1px;white-space:nowrap}
+.h-top .upd{font-size:12px;color:var(--fg-dim)}
+.h-top .cnt{font-size:12px;color:var(--fg-dim);margin-left:auto}
+#q{width:100%;max-width:420px;margin-top:8px;padding:7px 12px;background:var(--bg3);border:1px solid var(--line);border-radius:8px;color:var(--fg);font-size:14px;outline:none}
+#q:focus{border-color:var(--gold)}
+.chips{display:flex;gap:6px;flex-wrap:wrap;margin-top:8px;align-items:center}
+.chips .lbl{font-size:12px;color:var(--fg-dim);margin-right:2px}
+.chip{cursor:pointer;user-select:none;font-size:12.5px;padding:3px 11px;border-radius:20px;border:1px solid var(--line);background:var(--bg2);color:var(--fg-dim);transition:.15s}
+.chip.on{color:#fff;border-color:transparent}
+.chip.cat.on{background:var(--cc)}
+.chip.mkt.on{background:#31435e;color:#cfe1f5;border-color:#40587a}
+.chip.opt.on{background:#5a4a1e;color:var(--gold);border-color:#7a651f}
+
+main{max-width:860px;margin:0 auto;padding:18px 14px 80px}
+
+.undated{border:1px dashed #5a4a1e;border-radius:12px;background:#15130c;margin-bottom:22px;overflow:hidden}
+.undated>.ud-head{padding:9px 14px;font-size:14px;color:var(--gold);cursor:pointer;display:flex;justify-content:space-between}
+.undated .ud-body{padding:2px 14px 12px;display:none}
+.undated.open .ud-body{display:block}
+.ud-item{display:flex;gap:10px;align-items:baseline;padding:7px 0;border-top:1px solid #241f12}
+.ud-when{font-size:13px;color:var(--gold);white-space:nowrap;min-width:84px}
+
+.month{margin-bottom:8px}
+.m-head{position:sticky;top:118px;z-index:10;display:flex;align-items:center;gap:10px;padding:8px 4px;cursor:pointer;background:var(--bg)}
+.m-head h2{font-size:17px;color:#fff;font-weight:700}
+.m-head .m-cnt{font-size:12px;color:var(--fg-dim)}
+.m-head .arrow{margin-left:auto;color:var(--fg-dim);font-size:12px;transition:.2s}
+.month.closed .arrow{transform:rotate(-90deg)}
+.month.closed .m-body{display:none}
+.m-body{border-left:2px solid var(--line);margin-left:7px;padding-left:16px}
+.month.past .m-head h2{color:var(--fg-dim)}
+
+.fuzzy{border:1px dashed var(--line);border-radius:10px;padding:8px 12px;margin:6px 0 12px;background:#131820}
+.fuzzy .f-lbl{font-size:12px;color:var(--gold);margin-bottom:4px}
+
+.day{margin:14px 0}
+.d-head{display:flex;align-items:baseline;gap:10px;margin-bottom:6px}
+.d-date{font-size:15px;font-weight:700;color:#fff}
+.d-wk{font-size:12.5px;color:var(--fg-dim)}
+.dbadge{font-size:11.5px;padding:1px 8px;border-radius:10px;background:#3a2f10;color:var(--gold);border:1px solid #5a4a1e}
+.dbadge.today{background:#4a1414;color:#ff8a8a;border-color:#7a2020}
+.d-head.past .d-date{color:var(--fg-dim)}
+
+.ev{display:flex;gap:10px;background:var(--bg2);border:1px solid var(--line);border-radius:10px;padding:9px 12px;margin:6px 0;cursor:pointer;transition:.15s}
+.ev:hover{border-color:#3d4b61}
+.ev.past{opacity:.55}
+.ev .bar{width:4px;border-radius:3px;flex-shrink:0;background:var(--cc)}
+.ev .body{flex:1;min-width:0}
+.ev .t-line{display:flex;align-items:baseline;gap:8px;flex-wrap:wrap}
+.ev .title{font-size:14.5px;font-weight:600;color:#eef3f8}
+.ev .stars{color:var(--gold);font-size:12px;letter-spacing:1px;white-space:nowrap}
+.tag{font-size:11px;padding:1px 7px;border-radius:9px;white-space:nowrap}
+.tag.cat{background:color-mix(in srgb,var(--cc) 22%,transparent);color:var(--cc);border:1px solid color-mix(in srgb,var(--cc) 45%,transparent)}
+.tag.mkt{background:#22304a;color:#9fc3ec}
+.tag.tent{background:#3a2f10;color:var(--gold);border:1px dashed #5a4a1e}
+.tag.src{background:#232a35;color:var(--fg-dim)}
+.ev .time{font-size:12.5px;color:var(--fg-dim);margin-top:2px}
+.ev .note{display:none;font-size:13px;color:#b7c1cf;margin-top:6px;border-top:1px solid var(--line);padding-top:6px;white-space:pre-wrap}
+.ev.open .note{display:block}
+
+#todayline{border:none;border-top:2px solid var(--red);position:relative;margin:18px 0}
+#todayline::after{content:"今天 " attr(data-d);position:absolute;right:0;top:-9px;font-size:11px;background:var(--red);color:#fff;padding:0 8px;border-radius:8px}
+
+.empty{color:var(--fg-dim);text-align:center;padding:40px 0;font-size:14px}
+footer{max-width:860px;margin:0 auto;padding:0 14px 40px;color:var(--fg-dim);font-size:12.5px;border-top:1px solid var(--line);padding-top:14px}
+footer b{color:#aab6c6}
+#toTop{position:fixed;right:16px;bottom:16px;width:38px;height:38px;border-radius:50%;background:var(--bg3);border:1px solid var(--line);color:var(--fg-dim);font-size:16px;cursor:pointer;display:none}
+@media(max-width:600px){
+  .m-head{top:150px}
+  .h-top h1{font-size:17px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="h-top">
+    <h1>📅 未來事件時間表</h1>
+    <span class="upd" id="upd"></span>
+    <span class="cnt" id="cnt"></span>
+  </div>
+  <input id="q" type="search" placeholder="搜尋事件（公司、關鍵字…）">
+  <div class="chips" id="catChips"><span class="lbl">類別</span></div>
+  <div class="chips" id="mktChips"><span class="lbl">市場</span></div>
+  <div class="chips">
+    <span class="lbl">篩選</span>
+    <span class="chip opt" id="impChip" title="只顯示重要度 ★★ 以上">★★+</span>
+    <span class="chip opt" id="pastChip">顯示過去事件</span>
+    <span class="chip opt" id="expChip">展開全部備註</span>
+  </div>
+</header>
+
+<main>
+  <div class="undated" id="undated" style="display:none">
+    <div class="ud-head" onclick="this.parentNode.classList.toggle('open')">
+      <span>⏳ 日期未定（僅知年份／季度）</span><span id="udCnt"></span>
+    </div>
+    <div class="ud-body" id="udBody"></div>
+  </div>
+  <div id="timeline"></div>
+  <div class="empty" id="empty" style="display:none">沒有符合條件的事件</div>
+</main>
+
+<footer>
+  <b>資料更新方式</b><br>
+  ① 每日 06:30 自動抓取：FOMC／台股法說會（追蹤清單公司）／營收財報時程／金十財經日曆等。<br>
+  ② 每日 AI 掃描：Claude 排程掃描新聞，將新確認的重要事件自動加入。<br>
+  ③ 手動加入：在 Claude（Cowork）貼上文字或檔案，說「<b>加到時間表</b>」，解析確認後即自動更新本頁。<br>
+  <span style="opacity:.7">precision 標示：確定日 → 直接排入；僅知月份 → 該月「日期未定」區；僅知季度/年份 → 頁首待定區。</span>
+</footer>
+<button id="toTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
+
+<script>
+const PAYLOAD = /*__DATA__*/null;
+const CATS = ["央行利率","總經數據","台股法說","財報","營收","產品/科技","政治/政策","其他"];
+const MKTS = ["台灣","美國","歐洲","日本","中國","全球"];
+const WK = ["日","一","二","三","四","五","六"];
+const catColor = c => getComputedStyle(document.documentElement).getPropertyValue("--c-"+c.replace(/[\/]/g,"")).trim() || "#8a93a3";
+const srcLabel = {seed:"", manual:"手動", ai:"AI"};   // auto:* 顯示「自動」
+const pd = s => { const [y,m,d]=s.split("-").map(Number); return new Date(y,m-1,d); };
+const today = new Date(); today.setHours(0,0,0,0);
+const todayStr = `${today.getFullYear()}-${String(today.getMonth()+1).padStart(2,"0")}-${String(today.getDate()).padStart(2,"0")}`;
+
+let state = {cats:new Set(CATS), mkts:new Set(MKTS), imp:false, past:false, exp:false, q:""};
+try{ const s=JSON.parse(localStorage.getItem("fe_state")||"null");
+  if(s){ state={...state,...s,cats:new Set(s.cats||CATS),mkts:new Set(s.mkts||MKTS)}; } }catch(e){}
+const save=()=>{ try{ localStorage.setItem("fe_state",JSON.stringify({...state,cats:[...state.cats],mkts:[...state.mkts]})); }catch(e){} };
+
+function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
+function ddays(dstr){ return Math.round((pd(dstr)-today)/864e5); }
+function fmtRange(e){
+  const d=pd(e.date);
+  let s=`${d.getMonth()+1}/${d.getDate()}`;
+  if(e.date_end){ const d2=pd(e.date_end); s+=`–${d2.getMonth()+1}/${d2.getDate()}`; }
+  return s;
+}
+function quarterOf(m){ return Math.floor(m/3)+1; }
+
+function visible(e){
+  if(!state.cats.has(e.category)) return false;
+  if(!state.mkts.has(e.market)) return false;
+  if(state.imp && (e.importance||1)<2) return false;
+  if(state.q){ const q=state.q.toLowerCase();
+    if(!((e.title||"")+(e.note||"")+(e.id||"")).toLowerCase().includes(q)) return false; }
+  return true;
+}
+function isPast(e){ const end=e.date_end||e.date; return pd(end)<today; }
+
+function evHTML(e){
+  const cc=catColor(e.category);
+  const stars="★".repeat(e.importance||1)+"☆".repeat(3-(e.importance||1));
+  const src=e.source&&e.source.startsWith("auto")?"自動":(srcLabel[e.source]||"");
+  return `<div class="ev ${isPast(e)?"past":""} ${state.exp?"open":""}" style="--cc:${cc}" onclick="this.classList.toggle('open')">
+    <div class="bar"></div><div class="body">
+      <div class="t-line">
+        <span class="stars" title="重要度">${stars}</span>
+        <span class="title">${esc(e.title)}</span>
+        <span class="tag cat" style="--cc:${cc}">${esc(e.category)}</span>
+        <span class="tag mkt">${esc(e.market)}</span>
+        ${e.tentative?'<span class="tag tent">未定/預期</span>':""}
+        ${src?`<span class="tag src">${src}</span>`:""}
+      </div>
+      ${e.time?`<div class="time">🕐 ${esc(e.time)}</div>`:""}
+      ${(e.note||e.url)?`<div class="note">${esc(e.note||"")}${e.url?`${e.note?"\n":""}<a href="${esc(e.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">來源連結 ↗</a>`:""}</div>`:""}
+    </div></div>`;
+}
+
+function render(){
+  const evs=(PAYLOAD?.events||[]).filter(visible);
+  // ---- 頁首：年/季 待定 ----
+  const ud=evs.filter(e=>e.precision==="year"||e.precision==="quarter")
+              .sort((a,b)=>a.date<b.date?-1:1);
+  const udBox=document.getElementById("undated");
+  if(ud.length){
+    udBox.style.display="";
+    document.getElementById("udCnt").textContent=ud.length+" 筆";
+    document.getElementById("udBody").innerHTML=ud.map(e=>{
+      const d=pd(e.date);
+      const when=e.precision==="year"?`${d.getFullYear()} 年內`:`${d.getFullYear()} Q${quarterOf(d.getMonth())}`;
+      return `<div class="ud-item"><span class="ud-when">${when}</span><div style="flex:1">${evHTML(e)}</div></div>`;
+    }).join("");
+  } else udBox.style.display="none";
+
+  // ---- 月份群組 ----
+  const rest=evs.filter(e=>e.precision!=="year"&&e.precision!=="quarter");
+  const groups={};
+  rest.forEach(e=>{ const k=e.date.slice(0,7); (groups[k]=groups[k]||[]).push(e); });
+  const keys=Object.keys(groups).sort();
+  const curYM=todayStr.slice(0,7);
+  let html="", shown=0;
+  for(const k of keys){
+    const [y,m]=k.split("-").map(Number);
+    const monthPast = k<curYM;
+    if(monthPast && !state.past){
+      const remain=groups[k].filter(e=>!isPast(e));
+      if(!remain.length) continue;
+      groups[k]=remain;
+    }
+    let list=groups[k];
+    if(!state.past) list=list.filter(e=>!isPast(e)||k===curYM); // 當月保留近期已過事件供回顧
+    if(!list.length) continue;
+    shown+=list.length;
+    const fuzzy=list.filter(e=>e.precision==="month");
+    const days={};
+    list.filter(e=>e.precision!=="month").forEach(e=>{ (days[e.date]=days[e.date]||[]).push(e); });
+    const dayKeys=Object.keys(days).sort();
+
+    let body="";
+    if(fuzzy.length){
+      body+=`<div class="fuzzy"><div class="f-lbl">📌 本月・日期未定（${fuzzy.length}）</div>${fuzzy.map(evHTML).join("")}</div>`;
+    }
+    let todayInserted=false;
+    for(const dk of dayKeys){
+      if(k===curYM && !todayInserted && dk>=todayStr){
+        if(dk>todayStr) body+=`<hr id="todayline" data-d="${today.getMonth()+1}/${today.getDate()}">`;
+        todayInserted=true;
+      }
+      const d=pd(dk); const dd=ddays(dk);
+      const evsOfDay=days[dk];
+      const past=pd(evsOfDay[0].date_end||dk)<today;
+      let badge="";
+      if(dk===todayStr) badge=`<span class="dbadge today">今天</span>`;
+      else if(dd>0&&dd<=99) badge=`<span class="dbadge">D-${dd}</span>`;
+      body+=`<div class="day"><div class="d-head ${past?"past":""}">
+        <span class="d-date">${d.getMonth()+1}/${d.getDate()}</span>
+        <span class="d-wk">週${WK[d.getDay()]}</span>${badge}
+        ${evsOfDay[0].date_end?`<span class="d-wk">（至 ${fmtRange(evsOfDay[0]).split("–")[1]}）</span>`:""}
+      </div>${evsOfDay.map(evHTML).join("")}</div>`;
+    }
+    if(k===curYM && !todayInserted) body+=`<hr id="todayline" data-d="${today.getMonth()+1}/${today.getDate()}">`;
+    const closed = monthPast && state.past ? "closed past" : "";
+    html+=`<div class="month ${closed}" id="m-${k}">
+      <div class="m-head" onclick="this.parentNode.classList.toggle('closed')">
+        <h2>${y} 年 ${m} 月</h2><span class="m-cnt">${list.length} 筆</span><span class="arrow">▼</span>
+      </div><div class="m-body">${body}</div></div>`;
+  }
+  document.getElementById("timeline").innerHTML=html;
+  document.getElementById("empty").style.display=(shown+ud.length)?"none":"";
+  const fut=(PAYLOAD?.events||[]).filter(e=>!isPast(e)).length;
+  document.getElementById("cnt").textContent=`未來事件 ${fut} 筆`;
+}
+
+function chip(label,set,cls,color){
+  const el=document.createElement("span");
+  el.className=`chip ${cls}`+(set.has(label)?" on":"");
+  el.textContent=label;
+  if(color) el.style.setProperty("--cc",color);
+  el.onclick=()=>{ set.has(label)?set.delete(label):set.add(label); el.classList.toggle("on"); save(); render(); };
+  return el;
+}
+function init(){
+  const u=PAYLOAD?.updated||"";
+  document.getElementById("upd").textContent=u?`更新於 ${u.replace("T"," ").slice(0,16)}`:"";
+  const cc=document.getElementById("catChips");
+  CATS.forEach(c=>cc.appendChild(chip(c,state.cats,"cat",catColor(c))));
+  const mc=document.getElementById("mktChips");
+  MKTS.forEach(m=>mc.appendChild(chip(m,state.mkts,"mkt")));
+  const impC=document.getElementById("impChip"), pastC=document.getElementById("pastChip"), expC=document.getElementById("expChip");
+  impC.classList.toggle("on",state.imp); pastC.classList.toggle("on",state.past); expC.classList.toggle("on",state.exp);
+  impC.onclick=()=>{state.imp=!state.imp;impC.classList.toggle("on");save();render();};
+  pastC.onclick=()=>{state.past=!state.past;pastC.classList.toggle("on");save();render();};
+  expC.onclick=()=>{state.exp=!state.exp;expC.classList.toggle("on");save();render();};
+  const q=document.getElementById("q");
+  q.value=state.q||"";
+  q.oninput=()=>{state.q=q.value.trim();save();render();};
+  render();
+  const t=document.getElementById("todayline")||document.getElementById("m-"+todayStr.slice(0,7));
+  if(t) setTimeout(()=>t.scrollIntoView({block:"center"}),80);
+  addEventListener("scroll",()=>{document.getElementById("toTop").style.display=scrollY>600?"block":"none"});
+}
+init();
+</script>
+</body>
+</html>

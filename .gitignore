@@ -1,0 +1,5 @@
+build/
+dist/
+node_modules/
+.staticrypt.json
+__pycache__/
