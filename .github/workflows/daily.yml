@@ -45,8 +45,10 @@ jobs:
 
       - name: Encrypt with StatiCrypt
         env:
-          STATICRYPT_PASSWORD: ${{ secrets.PAGE_PASSWORD }}
+          RAW_PASSWORD: ${{ secrets.PAGE_PASSWORD }}
         run: |
+          # 去除貼入 Secret 時可能夾帶的換行與前後空白
+          export STATICRYPT_PASSWORD="$(printf '%s' "$RAW_PASSWORD" | tr -d '\r\n' | sed -e 's/^[[:space:]]*//' -e 's/[[:space:]]*$//')"
           mkdir -p dist
           cd build
           npx -y staticrypt index.html -d ../dist --short --remember 30 \
