@@ -2,12 +2,12 @@
 """每日自動抓取未來事件 → 合併進 data/events.json
 來源：
   1. 規則事件（台股營收截止、台指期結算、美國非農預定日）滾動生成未來 4 個月
-  2. 台股法說會（MOPS/TWSE/TPEx 開放資料，多端點嘗試；只納入 watchlist 公司）
-  3. 金十數據 MCP 財經日曆（重要度高的未來事件）
+  2. 台股法說會（證交所「每日重大訊息」中之法人說明會公告；只納入 watchlist 公司）
+  3. 金十數據 MCP 財經日曆（star>=3 的未來事件）
 原則：只新增/更新 source 為 auto:* 的事件；絕不動 manual / ai / seed 事件。
 所有錯誤僅記錄不中斷。log 寫入 logs/fetch_log.txt（會被 commit，方便遠端檢查）。
 """
-import json, os, re, sys, csv, io, hashlib, urllib.request, urllib.error
+import json, os, re, sys, hashlib, urllib.request, urllib.error
 import datetime as dt
 
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -32,17 +32,6 @@ def decode_any(b):
         except Exception: pass
     return b.decode("utf-8", "ignore")
 
-def roc_date(s):
-    """民國/西元日期字串 → date"""
-    s = re.sub(r"[^0-9]", "", str(s or ""))
-    try:
-        if len(s) == 7:  return dt.date(int(s[:3]) + 1911, int(s[3:5]), int(s[5:7]))
-        if len(s) == 8:  return dt.date(int(s[:4]), int(s[4:6]), int(s[6:8]))
-        if len(s) == 6:  return dt.date(int(s[:2]) + 1911, int(s[2:4]), int(s[4:6]))
-    except ValueError:
-        return None
-    return None
-
 def iso(d): return d.strftime("%Y-%m-%d")
 
 # ---------- 1. 規則事件 ----------
@@ -54,7 +43,6 @@ def rule_events():
         months.append(d)
         d = (d + dt.timedelta(days=32)).replace(day=1)
     for m in months:
-        # 台股營收截止：每月 10 日，遇六日順延（國定假日以人工/AI 修正）
         dl = m.replace(day=10)
         while dl.weekday() >= 5:
             dl += dt.timedelta(days=1)
@@ -64,14 +52,12 @@ def rule_events():
                 title=f"台股 {prev.month} 月營收公告截止", category="營收", market="台灣",
                 importance=2, time="", note="上市櫃須於每月 10 日前公告（遇假日順延；此為規則推算）",
                 url="", source="auto:rule", tentative=False))
-        # 台指期結算：第三個週三
         wed1 = m + dt.timedelta(days=(2 - m.weekday()) % 7)
         wed3 = wed1 + dt.timedelta(days=14)
         if wed3 >= TODAY:
             evs.append(dict(id=f"rule-taifex-{m:%Y-%m}", date=iso(wed3), precision="day",
                 title="台指期／選擇權結算日", category="其他", market="台灣",
                 importance=1, time="", note="每月第三個週三", url="", source="auto:rule", tentative=False))
-        # 美國非農：第一個週五（BLS 偶有調整，僅供預定）
         fri1 = m + dt.timedelta(days=(4 - m.weekday()) % 7)
         if fri1 >= TODAY:
             tw_time = "21:30" if m.month in (11, 12, 1, 2) else "20:30"
@@ -83,76 +69,53 @@ def rule_events():
     log(f"[rule] generated {len(evs)}")
     return evs
 
-# ---------- 2. 台股法說會 ----------
+# ---------- 2. 台股法說會（重大訊息） ----------
+DATE_PATS = [
+    re.compile(r"(\d{3})年(\d{1,2})月(\d{1,2})日"),
+    re.compile(r"(\d{3})/(\d{1,2})/(\d{1,2})"),
+    re.compile(r"(20\d{2})年(\d{1,2})月(\d{1,2})日"),
+    re.compile(r"(20\d{2})/(\d{1,2})/(\d{1,2})"),
+]
+def extract_date(text):
+    for pat in DATE_PATS:
+        m = pat.search(text or "")
+        if m:
+            y = int(m.group(1))
+            if y < 1000: y += 1911
+            try: return dt.date(y, int(m.group(2)), int(m.group(3)))
+            except ValueError: continue
+    return None
+
 def tw_calls(watch):
     evs = []
-    csv_sources = [
-        ("上市", "https://mopsov.twse.com.tw/nas/opendata/t100sb02_L.csv"),
-        ("上櫃", "https://mopsov.twse.com.tw/nas/opendata/t100sb02_O.csv"),
-        ("上市b", "https://mopsfin.twse.com.tw/opendata/t100sb02_L.csv"),
+    sources = [
+        ("上市", "https://openapi.twse.com.tw/v1/opendata/t187ap04_L"),
+        ("上櫃", "https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap04_O"),
     ]
-    got_csv = False
-    for label, url in csv_sources:
+    for label, url in sources:
         try:
-            raw, _ = http_raw(url)
-            text = decode_any(raw)
-            rows = list(csv.reader(io.StringIO(text)))
-            if len(rows) < 2:
-                log(f"[law-call {label}] empty"); continue
-            head = rows[0]
-            def col(*pats):
-                for i, h in enumerate(head):
-                    for p in pats:
-                        if p in h: return i
-                return -1
-            ci = col("代號"); ni = col("簡稱", "名稱")
-            di = col("說明會日期", "召開法人說明會日期", "日期")
-            ti = col("時間"); li = col("地點", "舉行")
-            if ci < 0 or di < 0:
-                log(f"[law-call {label}] header not matched: {head[:8]}"); continue
-            n = 0
-            for r in rows[1:]:
-                if len(r) <= max(ci, di): continue
-                code = re.sub(r"\D", "", r[ci])
-                if code not in watch: continue
-                d = roc_date(r[di])
-                if not d or d < TODAY: continue
-                name = r[ni].strip() if ni >= 0 and ni < len(r) else code
-                t = r[ti].strip() if ti >= 0 and ti < len(r) else ""
-                loc = r[li].strip() if li >= 0 and li < len(r) else ""
-                evs.append(dict(id=f"twcall-{code}-{d:%Y%m%d}", date=iso(d), precision="day",
-                    title=f"{name}（{code}）法說會", category="台股法說", market="台灣",
-                    importance=3 if code == "2330" else 2, time=t,
-                    note=(loc and f"地點：{loc}") or "", url="", source="auto:twse", tentative=False))
-                n += 1
-            got_csv = True
-            log(f"[law-call {label}] ok, matched {n}")
-        except Exception as e:
-            log(f"[law-call {label}] FAIL {type(e).__name__}: {e}")
-    # 後備：證交所每日重大訊息，主旨含「法人說明會」
-    if not got_csv:
-        try:
-            raw, _ = http_raw("https://openapi.twse.com.tw/v1/opendata/t187ap04_L",
-                              headers={"accept": "application/json", "User-Agent": "Mozilla/5.0"})
+            raw, _ = http_raw(url, headers={"accept": "application/json", "User-Agent": "Mozilla/5.0"})
             items = json.loads(decode_any(raw))
-            n = 0
+            n = seen = 0
             for it in items:
-                code = it.get("公司代號", "")
-                subj = it.get("主旨 ", "") or it.get("主旨", "")
-                if code not in watch or "法人說明會" not in subj: continue
-                m = re.search(r"(\d{3})年(\d{1,2})月(\d{1,2})日", subj)
-                if not m: continue
-                d = dt.date(int(m.group(1)) + 1911, int(m.group(2)), int(m.group(3)))
-                if d < TODAY: continue
-                name = it.get("公司名稱", code)
+                code = str(it.get("公司代號", "") or it.get("SecuritiesCompanyCode", "")).strip()
+                subj = ""
+                for k, v in it.items():
+                    if "主旨" in k: subj = str(v); break
+                if "法人說明會" not in subj and "法說會" not in subj: continue
+                seen += 1
+                if code not in watch: continue
+                d = extract_date(subj)
+                if not d or d < TODAY: continue
+                name = str(it.get("公司名稱", "") or code).strip()
                 evs.append(dict(id=f"twcall-{code}-{d:%Y%m%d}", date=iso(d), precision="day",
                     title=f"{name}（{code}）法說會", category="台股法說", market="台灣",
                     importance=3 if code == "2330" else 2, time="",
-                    note="來源：重大訊息公告", url="", source="auto:twse", tentative=False))
+                    note=f"來源：{label}重大訊息公告", url="", source="auto:twse", tentative=False))
                 n += 1
-            log(f"[law-call fallback 重大訊息] matched {n}")
+            log(f"[law-call {label}] 全部法說會公告 {seen} 筆，追蹤清單命中 {n}")
         except Exception as e:
-            log(f"[law-call fallback] FAIL {type(e).__name__}: {e}")
+            log(f"[law-call {label}] FAIL {type(e).__name__}: {e}")
     return evs
 
 # ---------- 3. 金十 MCP 財經日曆 ----------
@@ -172,59 +135,75 @@ def jin10_events():
             if k.lower() == "mcp-session-id": session["id"] = v
         text = decode_any(raw).strip()
         if not text: return None
-        if "data:" in text:  # SSE 格式
+        if "data:" in text:
             chunks = [l[5:].strip() for l in text.splitlines() if l.startswith("data:")]
             for c in reversed(chunks):
                 try: return json.loads(c)
                 except Exception: continue
             return None
         return json.loads(text)
+
+    def call_calendar(args):
+        res = rpc({"jsonrpc": "2.0", "id": 3, "method": "tools/call",
+                   "params": {"name": "list_calendar", "arguments": args}})
+        content = (res or {}).get("result", {}).get("content", [])
+        text = "".join(c.get("text", "") for c in content if isinstance(c, dict))
+        try: return json.loads(text)
+        except Exception: return None
+
     try:
-        init = rpc({"jsonrpc": "2.0", "id": 1, "method": "initialize",
-                    "params": {"protocolVersion": "2025-03-26", "capabilities": {},
-                               "clientInfo": {"name": "future-events", "version": "1.0"}}})
-        log(f"[jin10] initialize ok: {str(init)[:120]}")
-        try:
-            rpc({"jsonrpc": "2.0", "method": "notifications/initialized"})
+        rpc({"jsonrpc": "2.0", "id": 1, "method": "initialize",
+             "params": {"protocolVersion": "2025-03-26", "capabilities": {},
+                        "clientInfo": {"name": "future-events", "version": "1.0"}}})
+        try: rpc({"jsonrpc": "2.0", "method": "notifications/initialized"})
         except Exception: pass
         tl = rpc({"jsonrpc": "2.0", "id": 2, "method": "tools/list"})
         tools = (tl or {}).get("result", {}).get("tools", [])
-        log(f"[jin10] tools: {[t.get('name') for t in tools]}")
-        cal = next((t for t in tools if re.search(r"calendar|日历|日曆|rili", t.get("name", "") + t.get("description", ""), re.I)), None)
+        cal = next((t for t in tools if t.get("name") == "list_calendar"), None)
         if not cal:
-            log("[jin10] no calendar tool found"); return []
-        res = rpc({"jsonrpc": "2.0", "id": 3, "method": "tools/call",
-                   "params": {"name": cal["name"], "arguments": {}}})
-        content = (res or {}).get("result", {}).get("content", [])
-        text = "".join(c.get("text", "") for c in content if isinstance(c, dict))
-        log(f"[jin10] calendar raw head: {text[:300]}")
-        try:
-            data = json.loads(text)
-        except Exception:
-            log("[jin10] calendar not json, skip parse"); return []
-        items = data.get("data", {}).get("items", []) if isinstance(data, dict) else []
-        evs = []
-        for it in items:
+            log(f"[jin10] no list_calendar; tools={[t.get('name') for t in tools]}"); return []
+        log(f"[jin10] list_calendar inputSchema: {json.dumps(cal.get('inputSchema', {}), ensure_ascii=False)[:400]}")
+
+        raw_items = []
+        # 預設呼叫 + 嘗試帶日期參數抓未來幾天（參數不被接受就略過）
+        attempts = [{}]
+        for off in (1, 2, 3, 5, 7):
+            attempts.append({"date": iso(TODAY + dt.timedelta(days=off))})
+        for args in attempts:
+            data = call_calendar(args)
+            if data is None: continue
+            if isinstance(data, dict):
+                inner = data.get("data", data)
+                if isinstance(inner, dict): inner = inner.get("items", [])
+            else:
+                inner = data
+            if isinstance(inner, list) and inner:
+                raw_items.extend(inner)
+        log(f"[jin10] raw items: {len(raw_items)}")
+
+        evs, seen = [], set()
+        for it in raw_items:
             try:
-                tstr = str(it.get("time") or it.get("date") or it.get("pub_time") or "")
+                if not isinstance(it, dict): continue
+                tstr = str(it.get("pub_time") or it.get("time") or it.get("date") or "")
                 m = re.search(r"(\d{4})-(\d{2})-(\d{2})", tstr)
                 if not m: continue
                 d = dt.date(int(m.group(1)), int(m.group(2)), int(m.group(3)))
                 if d < TODAY or d > TODAY + dt.timedelta(days=45): continue
-                star = it.get("star") or it.get("importance") or it.get("level") or 0
+                star = it.get("star") or it.get("importance") or 0
                 try: star = int(star)
                 except Exception: star = 0
-                if star and star < 3: continue
-                title = str(it.get("name") or it.get("title") or it.get("content") or "").strip()
-                if not title: continue
+                if star < 3: continue
+                title = str(it.get("title") or it.get("name") or "").strip()
+                if not title or (title, iso(d)) in seen: continue
+                seen.add((title, iso(d)))
                 hh = re.search(r"(\d{2}:\d{2})", tstr)
-                country = str(it.get("country") or it.get("region") or "")
-                mkt = "美國" if "美" in country else "中國" if "中" in country else \
-                      "日本" if "日" in country else "歐洲" if ("欧" in country or "歐" in country or "德" in country or "法" in country) else "全球"
+                mkt = "美國" if "美" in title else "中國" if ("中国" in title or "中國" in title) else \
+                      "日本" if "日本" in title else "歐洲" if ("欧" in title or "德国" in title or "法国" in title or "英国" in title) else "全球"
                 eid = "jin10-" + hashlib.md5((title + iso(d)).encode()).hexdigest()[:10]
                 evs.append(dict(id=eid, date=iso(d), precision="day", title=title[:60],
-                    category="總經數據", market=mkt, importance=min(3, max(2, star or 2)),
-                    time=(hh.group(1) if hh else ""), note=f"金十財經日曆（重要度 {star}）" if star else "金十財經日曆",
+                    category="總經數據", market=mkt, importance=3,
+                    time=(hh.group(1) if hh else ""), note=f"金十財經日曆（重要度★{star}）",
                     url="", source="auto:jin10", tentative=False))
             except Exception:
                 continue
@@ -265,7 +244,7 @@ def main():
                     updated += 1
             continue
         if (ev["date"], norm_title(ev["title"])) in existing_keys:
-            continue  # 已有同日同名事件（可能為 seed/manual），不重複
+            continue
         events.append(ev)
         existing_keys.add((ev["date"], norm_title(ev["title"])))
         added += 1
