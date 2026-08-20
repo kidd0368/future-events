@@ -79,6 +79,10 @@ main{max-width:860px;margin:0 auto;padding:18px 14px 80px}
 .ev .time{font-size:12.5px;color:var(--fg-dim);margin-top:2px}
 .ev .note{display:none;font-size:13px;color:#b7c1cf;margin-top:6px;border-top:1px solid var(--line);padding-top:6px;white-space:pre-wrap}
 .ev.open .note{display:block}
+.ev .del{flex-shrink:0;align-self:flex-start;background:none;border:none;color:#525c6c;font-size:15px;cursor:pointer;padding:0 3px;line-height:1.4}
+.ev .del:hover{color:var(--red)}
+.ev.hiddenev{opacity:.45;border-style:dashed}
+.ev.hiddenev .del:hover{color:#3fb27f}
 
 #todayline{border:none;border-top:2px solid var(--red);position:relative;margin:18px 0}
 #todayline::after{content:"今天 " attr(data-d);position:absolute;right:0;top:-9px;font-size:11px;background:var(--red);color:#fff;padding:0 8px;border-radius:8px}
@@ -108,6 +112,8 @@ footer b{color:#aab6c6}
     <span class="chip opt" id="impChip" title="只顯示重要度 ★★ 以上">★★+</span>
     <span class="chip opt" id="pastChip">顯示過去事件</span>
     <span class="chip opt" id="expChip">展開全部備註</span>
+    <span class="chip opt" id="hidChip" style="display:none"></span>
+    <span class="chip opt" id="raChip" style="display:none">全部還原</span>
   </div>
 </header>
 
@@ -127,6 +133,7 @@ footer b{color:#aab6c6}
   ① 每日 06:30 自動抓取：FOMC／台股法說會（追蹤清單公司）／營收財報時程／金十財經日曆等。<br>
   ② 每日 AI 掃描：Claude 排程掃描新聞，將新確認的重要事件自動加入。<br>
   ③ 手動加入：在 Claude（Cowork）貼上文字或檔案，說「<b>加到時間表</b>」，解析確認後即自動更新本頁。<br>
+  ④ 刪除：點事件右側「✕」隱藏（只影響此瀏覽器，可由上方「已隱藏」還原）；要永久刪除請在 Claude 說「把 XX 從時間表刪掉」。<br>
   <span style="opacity:.7">precision 標示：確定日 → 直接排入；僅知月份 → 該月「日期未定」區；僅知季度/年份 → 頁首待定區。</span>
 </footer>
 <button id="toTop" onclick="scrollTo({top:0,behavior:'smooth'})">↑</button>
@@ -147,6 +154,26 @@ try{ const s=JSON.parse(localStorage.getItem("fe_state")||"null");
   if(s){ state={...state,...s,cats:new Set(s.cats||CATS),mkts:new Set(s.mkts||MKTS)}; } }catch(e){}
 const save=()=>{ try{ localStorage.setItem("fe_state",JSON.stringify({...state,cats:[...state.cats],mkts:[...state.mkts]})); }catch(e){} };
 
+// ---- 手動刪除（隱藏）事件：記在此瀏覽器的 localStorage ----
+let hidden=new Set(); try{ hidden=new Set(JSON.parse(localStorage.getItem("fe_hidden")||"[]")); }catch(e){}
+let showHidden=false;
+const saveHidden=()=>{ try{ localStorage.setItem("fe_hidden",JSON.stringify([...hidden])); }catch(e){} };
+function refreshHidChips(){
+  const h=document.getElementById("hidChip"), r=document.getElementById("raChip");
+  if(!h) return;
+  h.style.display=hidden.size?"":"none";
+  h.textContent=`已隱藏 ${hidden.size}`;
+  h.classList.toggle("on",showHidden);
+  r.style.display=(showHidden&&hidden.size)?"":"none";
+}
+function hideEv(id){
+  const ev=(PAYLOAD?.events||[]).find(x=>x.id===id); if(!ev) return;
+  if(!confirm(`隱藏「${ev.title}」？\n\n（只影響這個瀏覽器，之後可從「已隱藏」還原；要永久刪除請在 Claude 對話說「把它從時間表刪掉」）`)) return;
+  hidden.add(id); saveHidden(); refreshHidChips(); render();
+}
+function restoreEv(id){ hidden.delete(id); saveHidden(); if(!hidden.size) showHidden=false; refreshHidChips(); render(); }
+function restoreAll(){ if(!confirm(`還原全部 ${hidden.size} 筆隱藏事件？`)) return; hidden.clear(); saveHidden(); showHidden=false; refreshHidChips(); render(); }
+
 function esc(s){ return String(s||"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[m])); }
 function ddays(dstr){ return Math.round((pd(dstr)-today)/864e5); }
 function fmtRange(e){
@@ -158,6 +185,7 @@ function fmtRange(e){
 function quarterOf(m){ return Math.floor(m/3)+1; }
 
 function visible(e){
+  if(hidden.has(e.id) && !showHidden) return false;
   if(!state.cats.has(e.category)) return false;
   if(!state.mkts.has(e.market)) return false;
   if(state.imp && (e.importance||1)<2) return false;
@@ -171,7 +199,11 @@ function evHTML(e){
   const cc=catColor(e.category);
   const stars="★".repeat(e.importance||1)+"☆".repeat(3-(e.importance||1));
   const src=e.source&&e.source.startsWith("auto")?"自動":(srcLabel[e.source]||"");
-  return `<div class="ev ${isPast(e)?"past":""} ${state.exp?"open":""}" style="--cc:${cc}" onclick="this.classList.toggle('open')">
+  const hid=hidden.has(e.id);
+  const delBtn=hid
+    ?`<button class="del" title="還原此事件" onclick="event.stopPropagation();restoreEv('${e.id}')">↩</button>`
+    :`<button class="del" title="隱藏此事件" onclick="event.stopPropagation();hideEv('${e.id}')">✕</button>`;
+  return `<div class="ev ${isPast(e)?"past":""} ${state.exp?"open":""} ${hid?"hiddenev":""}" style="--cc:${cc}" onclick="this.classList.toggle('open')">
     <div class="bar"></div><div class="body">
       <div class="t-line">
         <span class="stars" title="重要度">${stars}</span>
@@ -183,7 +215,7 @@ function evHTML(e){
       </div>
       ${e.time?`<div class="time">🕐 ${esc(e.time)}</div>`:""}
       ${(e.note||e.url)?`<div class="note">${esc(e.note||"")}${e.url?`${e.note?"\n":""}<a href="${esc(e.url)}" target="_blank" rel="noopener" onclick="event.stopPropagation()">來源連結 ↗</a>`:""}</div>`:""}
-    </div></div>`;
+    </div>${delBtn}</div>`;
 }
 
 function render(){
@@ -257,7 +289,7 @@ function render(){
   }
   document.getElementById("timeline").innerHTML=html;
   document.getElementById("empty").style.display=(shown+ud.length)?"none":"";
-  const fut=(PAYLOAD?.events||[]).filter(e=>!isPast(e)).length;
+  const fut=(PAYLOAD?.events||[]).filter(e=>!isPast(e)&&!hidden.has(e.id)).length;
   document.getElementById("cnt").textContent=`未來事件 ${fut} 筆`;
 }
 
@@ -281,6 +313,9 @@ function init(){
   impC.onclick=()=>{state.imp=!state.imp;impC.classList.toggle("on");save();render();};
   pastC.onclick=()=>{state.past=!state.past;pastC.classList.toggle("on");save();render();};
   expC.onclick=()=>{state.exp=!state.exp;expC.classList.toggle("on");save();render();};
+  document.getElementById("hidChip").onclick=()=>{showHidden=!showHidden;refreshHidChips();render();};
+  document.getElementById("raChip").onclick=restoreAll;
+  refreshHidChips();
   const q=document.getElementById("q");
   q.value=state.q||"";
   q.oninput=()=>{state.q=q.value.trim();save();render();};
