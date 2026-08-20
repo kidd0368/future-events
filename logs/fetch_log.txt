@@ -1,11 +1,8 @@
-=== fetch_auto 2026-08-19T22:49:07 (UTC) ===
-[rule] generated 13
-[law-call 上市] FAIL HTTPError: HTTP Error 404: Not Found
-[law-call 上櫃] FAIL HTTPError: HTTP Error 404: Not Found
-[law-call 上市b] FAIL HTTPError: HTTP Error 404: 
-[law-call fallback 重大訊息] matched 0
-[jin10] initialize ok: {'jsonrpc': '2.0', 'id': 1, 'result': {'capabilities': {'logging': {}, 'resources': {'listChanged': True}, 'tools': {'li
-[jin10] tools: ['get_kline', 'get_news', 'get_quote', 'list_calendar', 'list_flash', 'list_news', 'search_flash', 'search_news']
-[jin10] calendar raw head: {"data":[{"actual":"50.6","affect_txt":"影响较小","consensus":null,"previous":"50.6","pub_time":"2026-08-17 06:30","revised":null,"star":1,"title":"新西兰7月服务业表现指数"},{"actual":"1.9","affect_txt":"利空","consensus":null,"previous":"2.5","pub_time":"2026-08-17 06:45","revised":null,"star":1,"title":"新西兰7月食品价格指
-[jin10] FAIL AttributeError: 'list' object has no attribute 'get'
-[merge] added 0, updated 0, total 64
+=== fetch_auto 2026-08-20T22:53:14 (UTC) ===
+[rule] generated 12
+[law-call 上市] 全部法說會公告 16 筆，追蹤清單命中 0
+[law-call 上櫃] 全部法說會公告 10 筆，追蹤清單命中 0
+[jin10] list_calendar inputSchema: {"type": "object", "additionalProperties": false}
+[jin10] raw items: 256
+[jin10] parsed 28
+[merge] added 27, updated 0, total 125
