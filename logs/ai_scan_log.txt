@@ -1,0 +1,1 @@
+2026-08-20 ai_scan: added 6 (Snapdragon Summit 9/22-24, Meta Connect 9/23-24, OpenAI DevDay 9/29, OCP Summit 10/12-15, APEC 11/18-19, GTC DC 11/30-12/3); updated 3 tentative->confirmed (SEMICON Taiwan 9/2-4, CES 2027 1/6-9, GTC 2027 3/14-18); fetch_log: law-call 404 & jin10 calendar parse FAIL

@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-20T06:49:16+08:00",
+ "updated": "2026-08-20",
  "events": [
   {
    "id": "tsmc-a16-2026",
@@ -95,21 +95,6 @@
    "added_at": "2026-08-19"
   },
   {
-   "id": "semicon-tw-2026",
-   "date": "2026-09-01",
-   "precision": "month",
-   "title": "SEMICON Taiwan 國際半導體展",
-   "category": "產品/科技",
-   "market": "台灣",
-   "importance": 2,
-   "time": "",
-   "note": "歷年多於 9 月上中旬在台北南港展覽館舉行，展期以官網公告為準",
-   "url": "",
-   "source": "seed",
-   "tentative": true,
-   "added_at": "2026-08-19"
-  },
-  {
    "date": "2026-09-01",
    "date_end": "2026-11-30",
    "precision": "month",
@@ -156,6 +141,22 @@
    "tentative": true,
    "id": "manual-20260820-4",
    "added_at": "2026-08-20"
+  },
+  {
+   "id": "semicon-tw-2026",
+   "date": "2026-09-02",
+   "precision": "day",
+   "title": "SEMICON Taiwan 國際半導體展",
+   "category": "產品/科技",
+   "market": "台灣",
+   "importance": 2,
+   "time": "",
+   "note": "官宣 9/2–9/4 台北南港展覽館；論壇 8/31 起。來源：SEMI 官網/TechNews",
+   "url": "https://semicontaiwan.org",
+   "source": "seed",
+   "tentative": false,
+   "added_at": "2026-08-19",
+   "date_end": "2026-09-04"
   },
   {
    "id": "us-nfp-2026-09",
@@ -294,6 +295,54 @@
    "added_at": "2026-08-19"
   },
   {
+   "id": "ai-20260820-1",
+   "date": "2026-09-22",
+   "date_end": "2026-09-24",
+   "precision": "day",
+   "title": "高通 Snapdragon Summit（Snapdragon 8 Elite Gen 6，2nm）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "夏威夷 Maui。台積電 2nm 旗艦手機晶片指標。來源：Qualcomm 官網/GSMArena",
+   "url": "https://www.qualcomm.com/company/events/snapdragon-summit",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260820-2",
+   "date": "2026-09-23",
+   "date_end": "2026-09-24",
+   "precision": "day",
+   "title": "Meta Connect 2026（新款智慧眼鏡/AI/Quest）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "Menlo Park。Keynote 9/23 16:00 PT（台北 9/24 07:00）。來源：Meta 官方部落格",
+   "url": "https://www.meta.com/connect/",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260820-3",
+   "date": "2026-09-29",
+   "date_end": null,
+   "precision": "day",
+   "title": "OpenAI DevDay 2026（舊金山）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "Fort Mason，OpenAI 最大開發者大會。來源：OpenAI 官方",
+   "url": "https://devday.openai.com/",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
+  },
+  {
    "id": "tsmc-q3-call-2026",
    "date": "2026-10-01",
    "precision": "month",
@@ -399,6 +448,22 @@
    "source": "seed",
    "tentative": false,
    "added_at": "2026-08-19"
+  },
+  {
+   "id": "ai-20260820-4",
+   "date": "2026-10-12",
+   "date_end": "2026-10-15",
+   "precision": "day",
+   "title": "OCP Global Summit 2026（AI 資料中心開放硬體）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "San Jose。主題 AI 機櫃/液冷/高壓直流，台系伺服器鏈相關。來源：OCP 官網",
+   "url": "https://www.opencompute.org/summit",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
   },
   {
    "id": "us-cpi-2026-10",
@@ -612,6 +677,22 @@
    "added_at": "2026-08-19"
   },
   {
+   "id": "ai-20260820-5",
+   "date": "2026-11-18",
+   "date_end": "2026-11-19",
+   "precision": "day",
+   "title": "APEC 領袖峰會（深圳）",
+   "category": "政治/政策",
+   "market": "全球",
+   "importance": 3,
+   "time": "",
+   "note": "第33屆 APEC 經濟領袖會議，關注美中領袖是否場邊會晤。來源：新華社/CGTN",
+   "url": "https://www.apec2026.cn",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
+  },
+  {
    "id": "us-pce-2026-11",
    "date": "2026-11-25",
    "precision": "day",
@@ -656,6 +737,22 @@
    "source": "seed",
    "tentative": false,
    "added_at": "2026-08-19"
+  },
+  {
+   "id": "ai-20260820-6",
+   "date": "2026-11-30",
+   "date_end": "2026-12-03",
+   "precision": "day",
+   "title": "NVIDIA GTC Washington, D.C.",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "11/30–12/3 華府場。來源：NVIDIA 官網",
+   "url": "https://www.nvidia.com/gtc/dc/",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-20"
   },
   {
    "id": "us-nfp-2026-12",
@@ -780,18 +877,19 @@
   },
   {
    "id": "ces-2027",
-   "date": "2027-01-01",
-   "precision": "month",
+   "date": "2027-01-06",
+   "precision": "day",
    "title": "CES 2027 消費電子展",
    "category": "產品/科技",
    "market": "美國",
    "importance": 2,
    "time": "",
-   "note": "歷年於 1 月上旬在拉斯維加斯舉行；AI PC、車用電子題材",
-   "url": "",
+   "note": "官宣 1/6–1/9 拉斯維加斯。來源：CTA 官網",
+   "url": "https://www.cta.tech/events/ces-2027/",
    "source": "seed",
-   "tentative": true,
-   "added_at": "2026-08-19"
+   "tentative": false,
+   "added_at": "2026-08-19",
+   "date_end": "2027-01-09"
   },
   {
    "id": "boj-2027-01",
@@ -811,18 +909,19 @@
   },
   {
    "id": "gtc-2027",
-   "date": "2027-03-01",
-   "precision": "month",
+   "date": "2027-03-14",
+   "precision": "day",
    "title": "NVIDIA GTC 2027 開發者大會",
    "category": "產品/科技",
    "market": "美國",
    "importance": 2,
    "time": "",
-   "note": "日期未公布；歷年多於 3 月中下旬聖荷西舉行，黃仁勳主題演講為 AI 硬體風向球",
-   "url": "",
+   "note": "NVIDIA 官方 FAQ：3/14–18 San Jose（官網橫幅另標 3/15–18，以 FAQ 為準）",
+   "url": "https://www.nvidia.com/gtc/",
    "source": "seed",
-   "tentative": true,
-   "added_at": "2026-08-19"
+   "tentative": false,
+   "added_at": "2026-08-19",
+   "date_end": "2027-03-18"
   },
   {
    "date": "2027-04-01",
