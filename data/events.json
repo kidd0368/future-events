@@ -1,5 +1,5 @@
 {
- "updated": "2026-08-21T17:31:45+08:00",
+ "updated": "2026-08-22T06:48:48+08:00",
  "events": [
   {
    "id": "tsmc-a16-2026",
@@ -384,7 +384,7 @@
    "category": "總經數據",
    "market": "中國",
    "importance": 3,
-   "time": "00:00",
+   "time": "09:43",
    "note": "金十財經日曆（重要度★4）",
    "url": "",
    "source": "auto:jin10",
@@ -399,7 +399,7 @@
    "category": "總經數據",
    "market": "中國",
    "importance": 3,
-   "time": "00:00",
+   "time": "09:43",
    "note": "金十財經日曆（重要度★3）",
    "url": "",
    "source": "auto:jin10",
@@ -419,6 +419,22 @@
    "url": "",
    "source": "auto:jin10",
    "tentative": false,
+   "added_at": "2026-08-20"
+  },
+  {
+   "id": "manual-20260820-17",
+   "date": "2026-08-21",
+   "date_end": null,
+   "precision": "day",
+   "title": "三星電子董事會審議新一輪股東回報方案（傳逾100兆韓元）",
+   "category": "其他",
+   "market": "全球",
+   "importance": 3,
+   "time": "15:00",
+   "note": "Reuters/Bloomberg：董事會確定 8/21 韓股收盤後（韓時16:00）召開並隨後公告。規模傳逾100兆韓元（Bloomberg 稱上看約790億美元；韓媒傳150–160兆韓元），以FCF 50%為基礎，含特別股息＋庫藏股註銷。三星官方僅稱「多方討論中」故仍列 tentative。前一日SK海力士已公布40兆韓元庫藏股註銷。",
+   "url": "https://www.reuters.com/business/samsung-elec-convene-board-meeting-friday-discuss-shareholder-return-plan-says-2026-08-20/",
+   "source": "manual",
+   "tentative": true,
    "added_at": "2026-08-20"
   },
   {
@@ -483,6 +499,22 @@
    "source": "manual",
    "tentative": true,
    "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260821-1",
+   "date": "2026-08-24",
+   "date_end": "2026-08-27",
+   "precision": "day",
+   "title": "台積電出席 Jefferies 半導體/IT硬體暨通訊科技海外法說會（芝加哥）",
+   "category": "台股法說",
+   "market": "台灣",
+   "importance": 2,
+   "time": "",
+   "note": "台積電已公告出席，為Q3法說前少數對外說明場合，市場關注先進製程與CoWoS產能評論。來源：Yahoo奇摩股市／公開資訊觀測站",
+   "url": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB8-24-27%E5%8F%83%E5%8A%A0jefferies%E8%88%89%E8%BE%A6%E4%B9%8B%E6%B5%B7%E5%A4%96%E6%B3%95%E8%AA%AA%E6%9C%83-104700399.html",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-21"
   },
   {
    "id": "manual-20260820-28",
@@ -580,22 +612,6 @@
    "added_at": "2026-08-20"
   },
   {
-   "id": "manual-20260820-17",
-   "date": "2026-08-21",
-   "date_end": null,
-   "precision": "day",
-   "title": "三星電子董事會審議新一輪股東回報方案（傳逾100兆韓元）",
-   "category": "其他",
-   "market": "全球",
-   "importance": 3,
-   "time": "15:00",
-   "note": "Reuters/Bloomberg：董事會確定 8/21 韓股收盤後（韓時16:00）召開並隨後公告。規模傳逾100兆韓元（Bloomberg 稱上看約790億美元；韓媒傳150–160兆韓元），以FCF 50%為基礎，含特別股息＋庫藏股註銷。三星官方僅稱「多方討論中」故仍列 tentative。前一日SK海力士已公布40兆韓元庫藏股註銷。",
-   "url": "https://www.reuters.com/business/samsung-elec-convene-board-meeting-friday-discuss-shareholder-return-plan-says-2026-08-20/",
-   "source": "manual",
-   "tentative": true,
-   "added_at": "2026-08-20"
-  },
-  {
    "id": "manual-20260820-31",
    "date": "2026-08-31",
    "date_end": "2026-09-01",
@@ -690,6 +706,22 @@
    "source": "manual",
    "tentative": false,
    "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260821-2",
+   "date": "2026-09-02",
+   "date_end": null,
+   "precision": "day",
+   "title": "博通（AVGO）FY26 Q3 財報（美股盤後）",
+   "category": "財報",
+   "market": "美國",
+   "importance": 3,
+   "time": "05:00",
+   "note": "博通官方新聞稿確認9/2美股盤後公布、法說會美東17:00（台北時間9/3 05:00）。市場焦點在ASIC/客製化AI加速器訂單與Google TPU動能。來源：Broadcom Investor Relations",
+   "url": "https://www.broadcom.com/company/news/financial-releases/64621",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-21"
   },
   {
    "id": "semicon-tw-2026",
@@ -922,6 +954,22 @@
    "source": "ai",
    "tentative": false,
    "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260821-3",
+   "date": "2026-09-23",
+   "date_end": null,
+   "precision": "day",
+   "title": "美光（MU）FY26 Q4 暨全年財報（美股盤後）",
+   "category": "財報",
+   "market": "美國",
+   "importance": 3,
+   "time": "04:30",
+   "note": "依美光歷年慣例與券商行事曆推估為9/23盤後（官方尚未正式公告，故列 tentative）。8/11美光已上調Q4財測至EPS 2.78–2.92、營收111–113億美元。來源：Wall Street Horizon／TipRanks",
+   "url": "https://investors.micron.com/events-and-presentations/",
+   "source": "ai",
+   "tentative": true,
+   "added_at": "2026-08-21"
   },
   {
    "id": "ai-20260820-2",
@@ -1204,6 +1252,22 @@
    "source": "seed",
    "tentative": false,
    "added_at": "2026-08-19"
+  },
+  {
+   "id": "ai-20260821-4",
+   "date": "2026-10-20",
+   "date_end": "2026-10-22",
+   "precision": "day",
+   "title": "TPCA Show 2026 台灣電路板產業國際展覽會（第27屆．台北南港）",
+   "category": "產品/科技",
+   "market": "台灣",
+   "importance": 2,
+   "time": "10:00",
+   "note": "官方確認10/20–22於南港展覽館舉行。PCB/CCL/載板供應鏈年度重點展會，可觀察AI伺服器高階板材、mSAP與M8/M9世代進度。來源：TPCA 官網",
+   "url": "https://www.tpcashow.com/",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-21"
   },
   {
    "id": "taifex-2026-10",
@@ -1494,6 +1558,22 @@
    "source": "ai",
    "tentative": false,
    "added_at": "2026-08-20"
+  },
+  {
+   "id": "ai-20260821-5",
+   "date": "2026-11-30",
+   "date_end": "2026-12-04",
+   "precision": "day",
+   "title": "AWS re:Invent 2026（拉斯維加斯）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "AWS 官方確認11/30–12/4舉行。重點為自研晶片（Trainium/Graviton）新世代、基礎模型與資料中心基礎建設路線圖，牽動ASIC與伺服器供應鏈。來源：AWS 官方活動頁",
+   "url": "https://aws.amazon.com/events/reinvent/",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-21"
   },
   {
    "id": "manual-20260820-41",
@@ -1935,86 +2015,6 @@
    "tentative": true,
    "id": "manual-20260820-12",
    "added_at": "2026-08-20"
-  },
-  {
-   "id": "ai-20260821-1",
-   "date": "2026-08-24",
-   "date_end": "2026-08-27",
-   "precision": "day",
-   "title": "台積電出席 Jefferies 半導體/IT硬體暨通訊科技海外法說會（芝加哥）",
-   "category": "台股法說",
-   "market": "台灣",
-   "importance": 2,
-   "time": "",
-   "note": "台積電已公告出席，為Q3法說前少數對外說明場合，市場關注先進製程與CoWoS產能評論。來源：Yahoo奇摩股市／公開資訊觀測站",
-   "url": "https://tw.stock.yahoo.com/news/%E5%8F%B0%E7%A9%8D%E9%9B%BB8-24-27%E5%8F%83%E5%8A%A0jefferies%E8%88%89%E8%BE%A6%E4%B9%8B%E6%B5%B7%E5%A4%96%E6%B3%95%E8%AA%AA%E6%9C%83-104700399.html",
-   "source": "ai",
-   "tentative": false,
-   "added_at": "2026-08-21"
-  },
-  {
-   "id": "ai-20260821-2",
-   "date": "2026-09-02",
-   "date_end": null,
-   "precision": "day",
-   "title": "博通（AVGO）FY26 Q3 財報（美股盤後）",
-   "category": "財報",
-   "market": "美國",
-   "importance": 3,
-   "time": "05:00",
-   "note": "博通官方新聞稿確認9/2美股盤後公布、法說會美東17:00（台北時間9/3 05:00）。市場焦點在ASIC/客製化AI加速器訂單與Google TPU動能。來源：Broadcom Investor Relations",
-   "url": "https://www.broadcom.com/company/news/financial-releases/64621",
-   "source": "ai",
-   "tentative": false,
-   "added_at": "2026-08-21"
-  },
-  {
-   "id": "ai-20260821-3",
-   "date": "2026-09-23",
-   "date_end": null,
-   "precision": "day",
-   "title": "美光（MU）FY26 Q4 暨全年財報（美股盤後）",
-   "category": "財報",
-   "market": "美國",
-   "importance": 3,
-   "time": "04:30",
-   "note": "依美光歷年慣例與券商行事曆推估為9/23盤後（官方尚未正式公告，故列 tentative）。8/11美光已上調Q4財測至EPS 2.78–2.92、營收111–113億美元。來源：Wall Street Horizon／TipRanks",
-   "url": "https://investors.micron.com/events-and-presentations/",
-   "source": "ai",
-   "tentative": true,
-   "added_at": "2026-08-21"
-  },
-  {
-   "id": "ai-20260821-4",
-   "date": "2026-10-20",
-   "date_end": "2026-10-22",
-   "precision": "day",
-   "title": "TPCA Show 2026 台灣電路板產業國際展覽會（第27屆．台北南港）",
-   "category": "產品/科技",
-   "market": "台灣",
-   "importance": 2,
-   "time": "10:00",
-   "note": "官方確認10/20–22於南港展覽館舉行。PCB/CCL/載板供應鏈年度重點展會，可觀察AI伺服器高階板材、mSAP與M8/M9世代進度。來源：TPCA 官網",
-   "url": "https://www.tpcashow.com/",
-   "source": "ai",
-   "tentative": false,
-   "added_at": "2026-08-21"
-  },
-  {
-   "id": "ai-20260821-5",
-   "date": "2026-11-30",
-   "date_end": "2026-12-04",
-   "precision": "day",
-   "title": "AWS re:Invent 2026（拉斯維加斯）",
-   "category": "產品/科技",
-   "market": "美國",
-   "importance": 2,
-   "time": "",
-   "note": "AWS 官方確認11/30–12/4舉行。重點為自研晶片（Trainium/Graviton）新世代、基礎模型與資料中心基礎建設路線圖，牽動ASIC與伺服器供應鏈。來源：AWS 官方活動頁",
-   "url": "https://aws.amazon.com/events/reinvent/",
-   "source": "ai",
-   "tentative": false,
-   "added_at": "2026-08-21"
   }
  ]
 }

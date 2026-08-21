@@ -1,8 +1,8 @@
-=== fetch_auto 2026-08-20T22:53:14 (UTC) ===
+=== fetch_auto 2026-08-21T22:48:35 (UTC) ===
 [rule] generated 12
-[law-call 上市] 全部法說會公告 16 筆，追蹤清單命中 0
-[law-call 上櫃] 全部法說會公告 10 筆，追蹤清單命中 0
+[law-call 上市] 全部法說會公告 11 筆，追蹤清單命中 0
+[law-call 上櫃] 全部法說會公告 8 筆，追蹤清單命中 0
 [jin10] list_calendar inputSchema: {"type": "object", "additionalProperties": false}
 [jin10] raw items: 256
-[jin10] parsed 28
-[merge] added 27, updated 0, total 125
+[jin10] parsed 18
+[merge] added 0, updated 2, total 130
