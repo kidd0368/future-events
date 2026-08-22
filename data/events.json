@@ -879,6 +879,22 @@
    "added_at": "2026-08-19"
   },
   {
+   "id": "ai-20260822-1",
+   "date": "2026-09-14",
+   "date_end": null,
+   "precision": "day",
+   "title": "Oracle（ORCL）FY27 Q1 財報（美股盤後）",
+   "category": "財報",
+   "market": "美國",
+   "importance": 3,
+   "time": "05:00",
+   "note": "TipRanks 列為已確認（9/14盤後，台北時間9/15凌晨）。OCI/RPO 積壓訂單為 AI 資本支出風向球，牽動 AI 供應鏈情緒。來源：TipRanks",
+   "url": "https://www.tipranks.com/stocks/orcl/earnings",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-22"
+  },
+  {
    "id": "taifex-2026-09",
    "date": "2026-09-16",
    "precision": "day",
@@ -1193,6 +1209,22 @@
    "added_at": "2026-08-20"
   },
   {
+   "id": "ai-20260822-5",
+   "date": "2026-10-01",
+   "date_end": null,
+   "precision": "month",
+   "title": "三星電子董事會定案股東回報細節（最高約800億美元回報方案）",
+   "category": "其他",
+   "market": "全球",
+   "importance": 2,
+   "time": "",
+   "note": "CNBC 8/21 報導：三星規劃最高800億美元股東回報（含回購），細節待10月下旬董事會定案；與 SK 海力士40兆韓元回購同屬記憶體股資本回報潮。日期未定故列 tentative。來源：CNBC",
+   "url": "https://www.cnbc.com/2026/08/21/samsung-shareholder-return-package-sk-hynix-buyback-ai-chip-boom.html",
+   "source": "ai",
+   "tentative": true,
+   "added_at": "2026-08-22"
+  },
+  {
    "id": "us-nfp-2026-10",
    "date": "2026-10-02",
    "precision": "day",
@@ -1285,6 +1317,38 @@
    "added_at": "2026-08-19"
   },
   {
+   "id": "ai-20260822-2",
+   "date": "2026-10-22",
+   "date_end": null,
+   "precision": "day",
+   "title": "Intel（INTC）2026 Q3 財報（美股盤後）",
+   "category": "財報",
+   "market": "美國",
+   "importance": 2,
+   "time": "05:00",
+   "note": "日期已確認（10/22盤後）。焦點：18A/Panther Lake 量產進度、代工訂單與 Q3 財測達成（營收指引158–168億美元）。來源：TipRanks/Investing.com",
+   "url": "https://www.tipranks.com/stocks/intc/earnings",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-22"
+  },
+  {
+   "id": "ai-20260822-3",
+   "date": "2026-10-27",
+   "date_end": null,
+   "precision": "day",
+   "title": "SK海力士 2026 Q3 財報",
+   "category": "財報",
+   "market": "全球",
+   "importance": 3,
+   "time": "08:00",
+   "note": "Investing.com 行事曆預估 10/27，官方尚未正式公告故列 tentative。HBM4 出貨與記憶體漲價循環為市場焦點。來源：Investing.com",
+   "url": "https://www.investing.com/equities/sk-hynix-inc-earnings",
+   "source": "ai",
+   "tentative": true,
+   "added_at": "2026-08-22"
+  },
+  {
    "id": "fomc-2026-10",
    "date": "2026-10-29",
    "precision": "day",
@@ -1329,6 +1393,22 @@
    "source": "seed",
    "tentative": false,
    "added_at": "2026-08-19"
+  },
+  {
+   "id": "ai-20260822-4",
+   "date": "2026-10-30",
+   "date_end": "2026-10-31",
+   "precision": "day",
+   "title": "鴻海科技日 HHTD26（台北南港展覽館一館）",
+   "category": "產品/科技",
+   "market": "台灣",
+   "importance": 2,
+   "time": "",
+   "note": "10/30（五）邀請賓客日、10/31（六）開放大眾免費參觀；首度擴大至一、四樓展區，展示三大智慧平台與 AI 整合成果（AI 機櫃/CPO/機器人可期）。來源：鴻海 HHTD 官網",
+   "url": "https://hhtd.honhai.com/zh-tw",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-22"
   },
   {
    "id": "nvda-earnings-fy27q3",
@@ -1465,6 +1545,22 @@
    "source": "seed",
    "tentative": false,
    "added_at": "2026-08-19"
+  },
+  {
+   "id": "ai-20260822-6",
+   "date": "2026-11-17",
+   "date_end": "2026-11-20",
+   "precision": "day",
+   "title": "Microsoft Ignite 2026（舊金山 Moscone Center）",
+   "category": "產品/科技",
+   "market": "美國",
+   "importance": 2,
+   "time": "",
+   "note": "微軟年度企業/AI 大會，聚焦 Copilot、Azure AI 基礎設施更新。來源：Moscone Center 官網",
+   "url": "https://www.moscone.com/events/microsoft-ignite-2026",
+   "source": "ai",
+   "tentative": false,
+   "added_at": "2026-08-22"
   },
   {
    "id": "ai-20260820-5",
